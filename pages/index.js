@@ -1,9 +1,9 @@
 import { Authenticator } from '@aws-amplify/ui-react';
 import { Amplify, API, Auth, withSSRContext } from 'aws-amplify';
 import Head from 'next/head'
-import awsExports from '@/aws-exports';
-import { createPost } from '@/graphql/mutations';
-import { listPosts } from '@/graphql/queries';
+import awsExports from '@/src/aws-exports';
+import { createPost } from '@/src/graphql/mutations';
+import { listPosts } from '@/src/graphql/queries';
 import styles from '@/styles/Home.module.css'
 
 Amplify.configure({...awsExports, ssr: true}) // 後続のリクエストにて資格情報を利用可能とする設定
