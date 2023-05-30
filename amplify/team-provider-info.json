@@ -10,6 +10,14 @@
       "StackName": "amplify-nextappnakagome-dev-131704",
       "StackId": "arn:aws:cloudformation:ap-northeast-1:758382128758:stack/amplify-nextappnakagome-dev-131704/d5d964d0-fea0-11ed-8f69-0626c85655e5",
       "AmplifyAppId": "dn7kdv2h7m6yk"
+    },
+    "categories": {
+      "auth": {
+        "nextappnakagomeffb109df": {}
+      },
+      "api": {
+        "nextappnakagome": {}
+      }
     }
   }
 }
