@@ -17,21 +17,16 @@ export async function getServerSideProps({req, params}){
             id: params.id
         }
     });
-    console.log({
-        method: "getServerSideProps",
-        query: "getPost",
-        data: data
-        // data は以下のような内容が返ってくる。
-        // getPost: {
-        //     id: '0eaf16b5-6f8b-476b-b971-02147fe9c0f7',
-        //     title: 'Today, 17:18:34',
-        //     content: 'I built an Amplify project with Next.js!',
-        //     createdAt: '2023-05-30T08:25:16.594Z',
-        //     updatedAt: '2023-05-30T08:25:16.594Z',
-        //     owner: 'nakagome'
-        // }
-        // }
-    })
+    // data は以下のような内容が返ってくる。
+    // getPost: {
+    //     id: '0eaf16b5-6f8b-476b-b971-02147fe9c0f7',
+    //     title: 'Today, 17:18:34',
+    //     content: 'I built an Amplify project with Next.js!',
+    //     createdAt: '2023-05-30T08:25:16.594Z',
+    //     updatedAt: '2023-05-30T08:25:16.594Z',
+    //     owner: 'nakagome'
+    // }
+    // }
     return {
         props: {
             post: data.getPost
@@ -49,7 +44,11 @@ export default function Post({ post }) {
           </div>
         );
     }
-
+    function handleGoToHome () {
+        // ホーム画面へリダイレクト
+        window.location.href = '/';
+    }
+        
     async function handleDelete(){
         try {
             await API.graphql({
@@ -66,21 +65,21 @@ export default function Post({ post }) {
             throw new Error(errors[0].message);
         }   
     }
+
     return (
         <div className={styles.container}>
           <Head>
             <title>{post.title} – Amplify + Next.js</title>
             <link rel="icon" href="/favicon.ico" />
           </Head>
-    
           <main className={styles.main}>
             <h1 className={styles.title}>{post.title}</h1>
     
             <p className={styles.description}>{post.content}</p>
           </main>
-    
           <footer className={styles.footer}>
             <button onClick={handleDelete}>💥 Delete post</button>
+            <button onClick={handleGoToHome}>🏡 Home</button>
           </footer>
         </div>
     );
