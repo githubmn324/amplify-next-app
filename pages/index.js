@@ -1,5 +1,6 @@
 import { Authenticator } from '@aws-amplify/ui-react';
-import { Amplify, API, Auth, graphqlOperation, withSSRContext } from 'aws-amplify';
+import { Amplify, I18n, API, Auth, graphqlOperation, withSSRContext } from 'aws-amplify';
+ import { translations } from '@aws-amplify/ui'; 
 import Head from 'next/head'
 import awsExports from '@/src/aws-exports';
 import { createPost } from '@/src/graphql/mutations';
@@ -12,6 +13,10 @@ Amplify.configure({
   ...awsExports, 
   ssr: true
 }) // 後続のリクエストにて資格情報を利用可能とする設定
+
+// 日本語化対応
+I18n.putVocabularies(translations);
+I18n.setLanguage('ja');
 
 // export async function getServerSideProps({ req }) {
 //   // 各リクエストに対して、Amplifyのコピー（資格情報、データ、ストレージ）を作成
@@ -36,7 +41,8 @@ Amplify.configure({
 export async function getStaticProps(){
   try{
     const response = await API.graphql({ 
-      query: listPosts, authMode: 'API_KEY'
+      query: listPosts,
+      authMode: 'API_KEY'
     })
     return { 
       props: { 
@@ -77,10 +83,9 @@ export default function Home({ posts = [] }) {
   const [currentUser, setCurrentUser] = useState("");
   const [updatedPostData, setUpdatedPostData] = useState("");
   const [dataToDisplay, setDataToDisplay] = useState(posts);
-    
+      
   // 画面表示する全ポストデータの取得
   async function getAllPostData(){
-    console.log("最新データ取得開始。")
     const { data } = await API.graphql({
       // authMode: 'AMAZON_COGNITO_USER_POOLS',
       authMode: 'API_KEY',
@@ -93,15 +98,16 @@ export default function Home({ posts = [] }) {
   }
   // サブスクリプション検知したら実行
   useEffect(()=>{
-    console.log("最新データ取得します。")
     getAllPostData();
   }, [updatedPostData])
 
   // サブスクリプションの設定
   let subscriptionOnCreate;
   function setupSubscriptions(){
-    console.log("サブスクリプション開始")
     subscriptionOnCreate = API.graphql(
+      // graphqlOperationではauthMode指定なし
+      // authModeが無指定の場合、 API.graphqlは
+      // Amplifyの初期化時に指定された認証方式を使ってAPIリクエストする
       graphqlOperation(newOnCreatePost)
     ).subscribe({
       next: (updatedPostData) => {
@@ -147,8 +153,9 @@ export default function Home({ posts = [] }) {
           ))}
 
           <div className={styles.card}>
-            <h3 className={styles.title}>New Post by {currentUser}</h3>
-            <Authenticator>
+            <h3 className={styles.title}>新しい投稿</h3>
+            <Authenticator socialProviders={['amazon', 'apple', 'facebook', 'google'] }>
+              <h3>現在のユーザ：{currentUser}</h3>
               <form onSubmit={handleCreatePost}>
                 <fieldset>
                   <legend>Title</legend>
