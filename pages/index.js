@@ -9,6 +9,9 @@ import styles from '@/styles/Home.module.css'
 import { useState, useEffect } from "react"
 import { onCreateMyPost, newOnCreatePost, newOnDeletePost } from '@/src/graphql/subscriptions';
 
+
+Amplify.configure({...awsExports, ssr: true });
+
 // export async function getServerSideProps({ req }) {
 //   // 各リクエストに対して、Amplifyのコピー（資格情報、データ、ストレージ）を作成
 //   const SSR = withSSRContext({ req }); 
@@ -31,9 +34,11 @@ import { onCreateMyPost, newOnCreatePost, newOnDeletePost } from '@/src/graphql/
 // SSG (Static Site Generator) で現在のテーブル情報を取得して、プリレンダリングする。
 export async function getStaticProps(){
   try{
+    console.log(Auth.Credentials)
     const response = await API.graphql({ 
       query: listPosts,
       authMode: 'API_KEY'
+      // authMode: 'AMAZON_COGNITO_USER_POOLS',
     })
     return { 
       props: { 
@@ -53,15 +58,16 @@ async function handleCreatePost(event) {
   event.preventDefault();
   const form = new FormData(event.target);
   try {
+    const variables = {
+      input: {
+        title: form.get('title'),
+        content: form.get('content')
+      }
+    };
     const { data } = await API.graphql({
       authMode: 'AMAZON_COGNITO_USER_POOLS',
       query: createPost,
-      variables: {
-        input: {
-          title: form.get('title'),
-          content: form.get('content')
-        }
-      }
+      variables: variables
     });
     window.location.href = `/posts/${data.createPost.id}`;
   } catch ({ errors }) {
@@ -126,10 +132,11 @@ export default function Home({ posts = [] }) {
 
   // 初回レンダリング時に実行
   useEffect(() => {
-    // 画面に現在のログインユーザ情報を表示
+    // 現在のログインユーザ情報を取得 
     Auth.currentAuthenticatedUser()
       .then((result)=>setCurrentUser(result.username))
       .catch(()=> setCurrentUser(""));
+    
     // サブスクリプションの開始
     setupSubscriptions();
     return () => {

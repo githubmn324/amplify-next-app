@@ -33,11 +33,11 @@
       "function": {
         "writedynamonakagome3": {
           "deploymentBucketName": "amplify-nextappnakagome-dev-131704-deployment",
-          "s3Key": "amplify-builds/writedynamonakagome3-4e6a5645785766523143-build.zip"
+          "s3Key": "amplify-builds/writedynamonakagome3-7664482f4d56676b6c62-build.zip"
         },
         "postDynamoNakagome": {
           "deploymentBucketName": "amplify-nextappnakagome-dev-131704-deployment",
-          "s3Key": "amplify-builds/postDynamoNakagome-5441746f69526d33434b-build.zip"
+          "s3Key": "amplify-builds/postDynamoNakagome-666675334233572f3851-build.zip"
         },
         "postDynamoFuncNakagome": {
           "deploymentBucketName": "amplify-nextappnakagome-dev-131704-deployment",

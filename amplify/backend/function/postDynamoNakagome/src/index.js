@@ -39,9 +39,8 @@ export const handler = async (event) => {
   /* parameters */
   const variables =  {
     'input': {
-      // 'owner': 'Lambda',
-      'title': "test: " + Date.now(),
-      'content':  "test: " + Date.now(),
+      'title': "Lambda Post Test: " + Date.now().toString(),
+      'content':  "This is a test.",
     }
   };
 
