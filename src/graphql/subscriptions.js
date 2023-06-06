@@ -13,6 +13,30 @@ export const newOnCreatePost = /* GraphQL */ `
     }
   }
 `;
+export const onCreateMyPost = /* GraphQL */ `
+  subscription OnCreateMyPost($owner: String) {
+    onCreateMyPost(owner: $owner) {
+      id
+      title
+      content
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const newOnDeletePost = /* GraphQL */ `
+  subscription NewOnDeletePost {
+    newOnDeletePost {
+      id
+      title
+      content
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 export const onCreatePost = /* GraphQL */ `
   subscription OnCreatePost(
     $filter: ModelSubscriptionPostFilterInput

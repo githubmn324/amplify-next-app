@@ -1,5 +1,19 @@
 {
   "api": {
+    "lambdawritedynamo": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "writedynamonakagome3"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
     "nextappnakagome": {
       "dependsOn": [
         {
@@ -18,11 +32,16 @@
               "userPoolConfig": {
                 "userPoolId": "authnextappnakagomeffb109df"
               }
+            },
+            {
+              "authenticationType": "AWS_IAM"
             }
           ],
           "defaultAuthentication": {
             "apiKeyConfig": {
-              "apiKeyExpirationDays": 7
+              "apiKeyExpirationDate": "2023-06-09T08:08:18.808Z",
+              "apiKeyExpirationDays": 7,
+              "description": ""
             },
             "authenticationType": "API_KEY"
           }
@@ -56,6 +75,142 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
+    }
+  },
+  "function": {
+    "postDynamoFuncNakagome": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "postDynamoNakagome": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "nextappnakagome"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "writedynamonakagome3": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_postDynamoFuncNakagome_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "postDynamoFuncNakagome"
+        }
+      ]
+    },
+    "AMPLIFY_function_postDynamoFuncNakagome_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "postDynamoFuncNakagome"
+        }
+      ]
+    },
+    "AMPLIFY_function_postDynamoNakagome_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "postDynamoNakagome"
+        }
+      ]
+    },
+    "AMPLIFY_function_postDynamoNakagome_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "postDynamoNakagome"
+        }
+      ]
+    },
+    "AMPLIFY_function_writedynamonakagome3_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "writedynamonakagome3"
+        }
+      ]
+    },
+    "AMPLIFY_function_writedynamonakagome3_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "writedynamonakagome3"
+        }
+      ]
+    },
+    "AMPLIFY_storage_Blogvsqwdtofdfdu5irrdtzmez7qnedev_arn": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "Blogvsqwdtofdfdu5irrdtzmez7qnedev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_Blogvsqwdtofdfdu5irrdtzmez7qnedev_partitionKeyName": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "Blogvsqwdtofdfdu5irrdtzmez7qnedev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_Blogvsqwdtofdfdu5irrdtzmez7qnedev_partitionKeyType": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "Blogvsqwdtofdfdu5irrdtzmez7qnedev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_Blogvsqwdtofdfdu5irrdtzmez7qnedev_region": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "Blogvsqwdtofdfdu5irrdtzmez7qnedev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_Blogvsqwdtofdfdu5irrdtzmez7qnedev_streamArn": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "Blogvsqwdtofdfdu5irrdtzmez7qnedev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_Blogvsqwdtofdfdu5irrdtzmez7qnedev_tableName": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "Blogvsqwdtofdfdu5irrdtzmez7qnedev"
+        }
+      ]
+    }
+  },
+  "storage": {
+    "Blogvsqwdtofdfdu5irrdtzmez7qnedev": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB",
+      "serviceType": "imported"
     }
   }
 }

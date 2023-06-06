@@ -7,16 +7,7 @@ import { createPost } from '@/src/graphql/mutations';
 import { listPosts } from '@/src/graphql/queries';
 import styles from '@/styles/Home.module.css'
 import { useState, useEffect } from "react"
-import { newOnCreatePost } from '@/src/graphql/subscriptions';
-
-Amplify.configure({
-  ...awsExports, 
-  ssr: true
-}) // 後続のリクエストにて資格情報を利用可能とする設定
-
-// 日本語化対応
-I18n.putVocabularies(translations);
-I18n.setLanguage('ja');
+import { onCreateMyPost, newOnCreatePost, newOnDeletePost } from '@/src/graphql/subscriptions';
 
 // export async function getServerSideProps({ req }) {
 //   // 各リクエストに対して、Amplifyのコピー（資格情報、データ、ストレージ）を作成
@@ -103,20 +94,36 @@ export default function Home({ posts = [] }) {
 
   // サブスクリプションの設定
   let subscriptionOnCreate;
+  let subscriptionOnDelete;
+
   function setupSubscriptions(){
-    subscriptionOnCreate = API.graphql(
+    subscriptionOnCreate = API.graphql({
       // graphqlOperationではauthMode指定なし
       // authModeが無指定の場合、 API.graphqlは
       // Amplifyの初期化時に指定された認証方式を使ってAPIリクエストする
-      graphqlOperation(newOnCreatePost)
+      query: newOnCreatePost,
+      // variables: {
+      //   owner: currentUser
+      // }
+    }).subscribe({
+      next: ({ value: { data }}) => {
+        const newPost = data.newOnCreatePost;
+        alert(`${newPost.owner} uploaded the new data`);
+        setUpdatedPostData(newPost);
+      },
+    });
+
+    subscriptionOnDelete = API.graphql(
+      graphqlOperation(newOnDeletePost)
     ).subscribe({
       next: (updatedPostData) => {
-        alert(`${updatedPostData.value.data.newOnCreatePost.owner} uploaded the new data`);
+        alert(`${updatedPostData.value.data.newOnDeletePost.owner} deleted the new data`);
         console.log({updatedPostData:updatedPostData})
         setUpdatedPostData(updatedPostData);
       },
-    })
+    });
   };
+
   // 初回レンダリング時に実行
   useEffect(() => {
     // 画面に現在のログインユーザ情報を表示
@@ -127,6 +134,7 @@ export default function Home({ posts = [] }) {
     setupSubscriptions();
     return () => {
       subscriptionOnCreate.unsubscribe();
+      subscriptionOnDelete.unsubscribe();
     }
   });
 
@@ -154,7 +162,8 @@ export default function Home({ posts = [] }) {
 
           <div className={styles.card}>
             <h3 className={styles.title}>新しい投稿</h3>
-            <Authenticator socialProviders={['amazon', 'apple', 'facebook', 'google'] }>
+            {/* <Authenticator socialProviders={['amazon', 'apple', 'facebook', 'google'] }> */}
+            <Authenticator>
               <h3>現在のユーザ：{currentUser}</h3>
               <form onSubmit={handleCreatePost}>
                 <fieldset>

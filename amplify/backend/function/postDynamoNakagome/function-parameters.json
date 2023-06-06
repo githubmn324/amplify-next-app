@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "api": {
+      "nextappnakagome": [
+        "Query",
+        "Mutation",
+        "Subscription"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

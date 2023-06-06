@@ -9,14 +9,40 @@
       "UnauthRoleName": "amplify-nextappnakagome-dev-131704-unauthRole",
       "StackName": "amplify-nextappnakagome-dev-131704",
       "StackId": "arn:aws:cloudformation:ap-northeast-1:758382128758:stack/amplify-nextappnakagome-dev-131704/d5d964d0-fea0-11ed-8f69-0626c85655e5",
-      "AmplifyAppId": "dn7kdv2h7m6yk"
+      "AmplifyAppId": "dn7kdv2h7m6yk",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-nextappnakagome-dev-131704-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
       "auth": {
         "nextappnakagomeffb109df": {}
       },
       "api": {
-        "nextappnakagome": {}
+        "nextappnakagome": {},
+        "lambdawritedynamo": {}
+      },
+      "storage": {
+        "Blogvsqwdtofdfdu5irrdtzmez7qnedev": {
+          "tableName": "Blog-vsqwdtofdfdu5irrdtzmez7qne-dev",
+          "region": "ap-northeast-1",
+          "arn": "arn:aws:dynamodb:ap-northeast-1:758382128758:table/Blog-vsqwdtofdfdu5irrdtzmez7qne-dev",
+          "streamArn": "arn:aws:dynamodb:ap-northeast-1:758382128758:table/Blog-vsqwdtofdfdu5irrdtzmez7qne-dev/stream/2023-06-01T06:00:55.110",
+          "partitionKeyName": "id",
+          "partitionKeyType": "S"
+        }
+      },
+      "function": {
+        "writedynamonakagome3": {
+          "deploymentBucketName": "amplify-nextappnakagome-dev-131704-deployment",
+          "s3Key": "amplify-builds/writedynamonakagome3-4e6a5645785766523143-build.zip"
+        },
+        "postDynamoNakagome": {
+          "deploymentBucketName": "amplify-nextappnakagome-dev-131704-deployment",
+          "s3Key": "amplify-builds/postDynamoNakagome-5441746f69526d33434b-build.zip"
+        },
+        "postDynamoFuncNakagome": {
+          "deploymentBucketName": "amplify-nextappnakagome-dev-131704-deployment",
+          "s3Key": "amplify-builds/postDynamoFuncNakagome-6875444e61656575795a-build.zip"
+        }
       }
     }
   }
