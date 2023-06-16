@@ -7,6 +7,17 @@ export const newOnCreatePost = /* GraphQL */ `
       id
       title
       content
+      comments {
+        items {
+          id
+          content
+          createdAt
+          updatedAt
+          postCommentsId
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       owner
@@ -19,6 +30,17 @@ export const onCreateMyPost = /* GraphQL */ `
       id
       title
       content
+      comments {
+        items {
+          id
+          content
+          createdAt
+          updatedAt
+          postCommentsId
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       owner
@@ -31,6 +53,17 @@ export const newOnDeletePost = /* GraphQL */ `
       id
       title
       content
+      comments {
+        items {
+          id
+          content
+          createdAt
+          updatedAt
+          postCommentsId
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       owner
@@ -46,6 +79,17 @@ export const onCreatePost = /* GraphQL */ `
       id
       title
       content
+      comments {
+        items {
+          id
+          content
+          createdAt
+          updatedAt
+          postCommentsId
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       owner
@@ -61,6 +105,17 @@ export const onUpdatePost = /* GraphQL */ `
       id
       title
       content
+      comments {
+        items {
+          id
+          content
+          createdAt
+          updatedAt
+          postCommentsId
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
       owner
@@ -76,8 +131,97 @@ export const onDeletePost = /* GraphQL */ `
       id
       title
       content
+      comments {
+        items {
+          id
+          content
+          createdAt
+          updatedAt
+          postCommentsId
+          owner
+        }
+        nextToken
+      }
       createdAt
       updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateComment = /* GraphQL */ `
+  subscription OnCreateComment(
+    $filter: ModelSubscriptionCommentFilterInput
+    $owner: String
+  ) {
+    onCreateComment(filter: $filter, owner: $owner) {
+      id
+      post {
+        id
+        title
+        content
+        comments {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      content
+      createdAt
+      updatedAt
+      postCommentsId
+      owner
+    }
+  }
+`;
+export const onUpdateComment = /* GraphQL */ `
+  subscription OnUpdateComment(
+    $filter: ModelSubscriptionCommentFilterInput
+    $owner: String
+  ) {
+    onUpdateComment(filter: $filter, owner: $owner) {
+      id
+      post {
+        id
+        title
+        content
+        comments {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      content
+      createdAt
+      updatedAt
+      postCommentsId
+      owner
+    }
+  }
+`;
+export const onDeleteComment = /* GraphQL */ `
+  subscription OnDeleteComment(
+    $filter: ModelSubscriptionCommentFilterInput
+    $owner: String
+  ) {
+    onDeleteComment(filter: $filter, owner: $owner) {
+      id
+      post {
+        id
+        title
+        content
+        comments {
+          nextToken
+        }
+        createdAt
+        updatedAt
+        owner
+      }
+      content
+      createdAt
+      updatedAt
+      postCommentsId
       owner
     }
   }

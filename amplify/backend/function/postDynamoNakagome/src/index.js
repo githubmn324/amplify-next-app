@@ -37,9 +37,11 @@ export const handler = async (event) => {
   console.log(`EVENT: ${JSON.stringify(event)}`);
 
   /* parameters */
+  // 日本時間取得
+  let jstDate = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
   const variables =  {
     'input': {
-      'title': "Lambda Post Test: " + Date.now().toString(),
+      'title': "Lambda Post Test: " + jstDate,
       'content':  "This is a test.",
     }
   };

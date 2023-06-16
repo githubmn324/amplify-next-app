@@ -1,19 +1,5 @@
 {
   "api": {
-    "lambdawritedynamo": {
-      "dependsOn": [
-        {
-          "attributes": [
-            "Name",
-            "Arn"
-          ],
-          "category": "function",
-          "resourceName": "writedynamonakagome3"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "API Gateway"
-    },
     "nextappnakagome": {
       "dependsOn": [
         {
@@ -78,12 +64,6 @@
     }
   },
   "function": {
-    "postDynamoFuncNakagome": {
-      "build": true,
-      "dependsOn": [],
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
     "postDynamoNakagome": {
       "build": true,
       "dependsOn": [
@@ -99,31 +79,9 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
-    },
-    "writedynamonakagome3": {
-      "build": true,
-      "dependsOn": [],
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
     }
   },
   "parameters": {
-    "AMPLIFY_function_postDynamoFuncNakagome_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "postDynamoFuncNakagome"
-        }
-      ]
-    },
-    "AMPLIFY_function_postDynamoFuncNakagome_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "postDynamoFuncNakagome"
-        }
-      ]
-    },
     "AMPLIFY_function_postDynamoNakagome_deploymentBucketName": {
       "usedBy": [
         {
@@ -137,22 +95,6 @@
         {
           "category": "function",
           "resourceName": "postDynamoNakagome"
-        }
-      ]
-    },
-    "AMPLIFY_function_writedynamonakagome3_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "writedynamonakagome3"
-        }
-      ]
-    },
-    "AMPLIFY_function_writedynamonakagome3_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "writedynamonakagome3"
         }
       ]
     },

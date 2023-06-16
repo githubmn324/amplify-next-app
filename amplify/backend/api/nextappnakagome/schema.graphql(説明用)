@@ -1,0 +1,106 @@
+# This "input" configures a global authorization rule to enable public access to
+# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
+input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
+
+type Post @model @auth(rules: [
+    { allow: owner }
+    { allow: private, provider: iam }
+    { allow: public, operations: [read] }
+  ]) {
+    id: ID!
+    title: String!
+    content: String!
+}
+
+type Subscription {
+  newOnCreatePost: Post @aws_subscribe(mutations: ["createPost"])
+  onCreateMyPost(owner:String): Post 
+    @aws_subscribe(mutations: ["createPost", "updatePost", "deletePost"]) @aws_cognito_user_pools
+  newOnDeletePost: Post @aws_subscribe(mutations: ["deletePost"])
+}
+
+---------- v1 script -----------
+type Event @model
+  @key(
+    fields: ["itemType", "time"],   // 1つ目はPartition Key, 2つ目以降はSort Key。
+    name: "itemType",               // Secondary Indexの名前。省略可能。
+    queryField: "eventsByDate"      // Secondary Index Filed 
+  )
+  @auth(rules: [
+    { allow: groups, groups: ["Admin"] },   // allow admin group to any operations
+    { allow: public, operations: [read] },  // allow read operation to anyone who have access to API key
+    { allow: private, operations: [read] }  // allow read operation to signed-in users
+  ]){
+    id: ID!
+    name: String!
+    description: String
+    time: String!
+    itemType: String!
+    comments: [Comment] @connection     // @modelオブジェクト間関係の定義
+  }
+
+---------- v2 script -----------
+type Event @model
+  @key(
+    fields: ["itemType", "time"],   // 1つ目はPartition Key, 2つ目以降はSort Key。
+    name: "itemType",               // Secondary Indexの名前。省略可能。
+    queryField: "eventsByDate"      // Secondary Index Filed 
+  )
+  @auth(rules: [
+    { allow: groups, groups: ["Admin"] },   // allow admin group to any operations
+    { allow: public, operations: [read] },  // allow read operation to anyone who have access to API key
+    { allow: private, operations: [read] }  // allow read operation to signed-in users
+  ]){
+    id: ID!
+    name: String!
+    description: String
+    time: String!
+    itemType: String!
+    comments: [Comment] @hasMany     // @modelオブジェクト間関係の定義
+  }
+
+type Comment @model
+  @auth(rules:[
+    { allow: owner, ownerField: "author" }, // allow the author to any operations
+    { allow: public, operations: [read] },  // allow read operation to anyone who have access to API key
+    { allow: private, operations: [read]}   // allow read operation to signed-in users
+  ]){
+    id: ID!
+    message: String!
+    author: String
+  }
+
+type Order @model 
+  @key(fields: ["orderId"])
+  @key(name: "byOrderByAmount", fields: ["orderId", "amount"] ) // global secondary index　1
+  @key(name: "byCustomerByStatusByDate", fields: ["cutomerId", "status", "date"] ) {  // global secondary index 2
+    orderId: ID! 
+    customerID: ID!
+    status: String!
+    amount: Int!
+    date: String!
+  }
+
+type Order @model {
+  orderId: ID! @primaryKey @index(name: "byOrderByAmount", sortKeyFields: ["amount"])
+  customerID: ID! @index(name: "byCustomerByStatusByDate", sortKeyFields: ["status", "date"])
+  status: String!
+  amount: Int!
+  date: String!
+}
+
+mutation CreatePost {
+  createPost(input: {title: "Hello World"}){
+    title
+    idcomments {
+      items {
+        id
+        content
+      }
+    }
+  }
+}
+const params= {
+  input : { title: "Hello World!" }
+}
+API.graphqlOperation(createPost, params)

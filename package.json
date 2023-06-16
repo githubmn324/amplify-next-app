@@ -14,5 +14,8 @@
     "next": "13.4.2",
     "react": "18.2.0",
     "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "dynamodb-seed": "^1.1.1"
   }
 }

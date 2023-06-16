@@ -7,7 +7,7 @@ import styles from '../../styles/Home.module.css';
 
 import { useRouter } from 'next/router';
 
-Amplify.configure({...awsExports, ssr:true });
+Amplify.configure({...awsExports, ssr: true });
 
 export async function getServerSideProps({req, params}){
     const SSR = withSSRContext({req});
@@ -60,9 +60,12 @@ export default function Post({ post }) {
             });
             // ホーム画面へリダイレクト
             window.location.href = '/';
-        } catch ({ errors }) {
-            console.error(...errors);
-            throw new Error(errors[0].message);
+          } catch (error) {
+            console.error(error);
+            // } catch ({ errors }) {
+            // console.error(...errors);
+            // throw new Error(errors[0].message);
+
         }   
     }
 

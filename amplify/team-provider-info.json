@@ -17,8 +17,7 @@
         "nextappnakagomeffb109df": {}
       },
       "api": {
-        "nextappnakagome": {},
-        "lambdawritedynamo": {}
+        "nextappnakagome": {}
       },
       "storage": {
         "Blogvsqwdtofdfdu5irrdtzmez7qnedev": {
@@ -31,17 +30,9 @@
         }
       },
       "function": {
-        "writedynamonakagome3": {
-          "deploymentBucketName": "amplify-nextappnakagome-dev-131704-deployment",
-          "s3Key": "amplify-builds/writedynamonakagome3-7664482f4d56676b6c62-build.zip"
-        },
         "postDynamoNakagome": {
           "deploymentBucketName": "amplify-nextappnakagome-dev-131704-deployment",
-          "s3Key": "amplify-builds/postDynamoNakagome-666675334233572f3851-build.zip"
-        },
-        "postDynamoFuncNakagome": {
-          "deploymentBucketName": "amplify-nextappnakagome-dev-131704-deployment",
-          "s3Key": "amplify-builds/postDynamoFuncNakagome-6875444e61656575795a-build.zip"
+          "s3Key": "amplify-builds/postDynamoNakagome-746c4f33585757385062-build.zip"
         }
       }
     }

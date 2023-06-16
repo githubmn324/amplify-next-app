@@ -1,0 +1,5 @@
+#if($ctx.identity.claims.get("username") != ${ctx.arguments.owner})
+	$utils.unauthorized()
+#else
+    $util.toJson($ctx.result)
+#end

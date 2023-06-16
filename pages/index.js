@@ -7,41 +7,20 @@ import { createPost } from '@/src/graphql/mutations';
 import { listPosts } from '@/src/graphql/queries';
 import styles from '@/styles/Home.module.css'
 import { useState, useEffect } from "react"
-import { onCreateMyPost, newOnCreatePost, newOnDeletePost } from '@/src/graphql/subscriptions';
+import { onCreatePost, onCreateMyPost, newOnCreatePost, newOnDeletePost } from '@/src/graphql/subscriptions';
 
 
 Amplify.configure({...awsExports, ssr: true });
 
-// export async function getServerSideProps({ req }) {
-//   // 各リクエストに対して、Amplifyのコピー（資格情報、データ、ストレージ）を作成
-//   const SSR = withSSRContext({ req }); 
-//   try {
-//     // POSTテーブル
-//     const response = await SSR.API.graphql({ query: listPosts, authMode: 'API_KEY' })
-//     return {
-//       props: {
-//         posts: response.data.listPosts.items,
-//       }
-//     };
-//   }catch(err){
-//     console.log(err);
-//     return {
-//       props: {},
-//     };
-//   };
-// };
-
-// SSG (Static Site Generator) で現在のテーブル情報を取得して、プリレンダリングする。
-export async function getStaticProps(){
-  try{
-    console.log(Auth.Credentials)
-    const response = await API.graphql({ 
-      query: listPosts,
-      authMode: 'API_KEY'
-      // authMode: 'AMAZON_COGNITO_USER_POOLS',
-    })
-    return { 
-      props: { 
+export async function getServerSideProps({ req }) {
+  // 各リクエストに対して、Amplifyのコピー（資格情報、データ、ストレージ）を作成
+  const SSR = withSSRContext({ req }); 
+  try {
+    console.log("nakagome project SSR entering")
+    // POSTテーブル
+    const response = await SSR.API.graphql({ query: listPosts, authMode: 'API_KEY' })
+    return {
+      props: {
         posts: response.data.listPosts.items,
       }
     };
@@ -50,8 +29,29 @@ export async function getStaticProps(){
     return {
       props: {},
     };
-  }
+  };
 };
+
+// // SSG (Static Site Generator) で現在のテーブル情報を取得して、プリレンダリングする。
+// export async function getStaticProps(){
+//   try{
+//     console.log(Auth.Credentials)
+//     const response = await API.graphql({ 
+//       query: listPosts,
+//       authMode: 'API_KEY'
+//     })
+//     return { 
+//       props: { 
+//         posts: response.data.listPosts.items,
+//       }
+//     };
+//   }catch(err){
+//     console.log(err);
+//     return {
+//       props: {},
+//     };
+//   }
+// };
 
 // タイムラインへ投稿する
 async function handleCreatePost(event) {  
@@ -88,8 +88,10 @@ export default function Home({ posts = [] }) {
       authMode: 'API_KEY',
       query: listPosts,
     });
-    console.log("dataToDisplay更新")
-    console.log({data: data.listPosts.items})
+    console.log("dataToDisplay 更新");
+    console.log({
+      data: data.listPosts.items
+    })
     console.log(data.listPosts.items.length)
     setDataToDisplay(data.listPosts.items);
   }
@@ -103,35 +105,47 @@ export default function Home({ posts = [] }) {
   let subscriptionOnDelete;
 
   function setupSubscriptions(){
-    subscriptionOnCreate = API.graphql({
-      // graphqlOperationではauthMode指定なし
-      // authModeが無指定の場合、 API.graphqlは
-      // Amplifyの初期化時に指定された認証方式を使ってAPIリクエストする
-      query: newOnCreatePost,
-      // variables: {
-      //   owner: currentUser
-      // }
-    }).subscribe({
-      next: ({ value: { data }}) => {
-        const newPost = data.newOnCreatePost;
-        alert(`${newPost.owner} uploaded the new data`);
-        setUpdatedPostData(newPost);
-      },
-    });
-
-    subscriptionOnDelete = API.graphql(
-      graphqlOperation(newOnDeletePost)
-    ).subscribe({
-      next: (updatedPostData) => {
-        alert(`${updatedPostData.value.data.newOnDeletePost.owner} deleted the new data`);
-        console.log({updatedPostData:updatedPostData})
-        setUpdatedPostData(updatedPostData);
-      },
-    });
+    try{
+      const graphalQuery = {
+        // graphqlOperationではauthMode指定なし
+        // authModeが無指定の場合、 API.graphqlは
+        // Amplifyの初期化時に指定された認証方式を使ってAPIリクエストする
+        authMode: 'AMAZON_COGNITO_USER_POOLS',
+        query: onCreateMyPost,
+        variables: {
+          owner: currentUser
+        }
+      }
+      console.log('サブスクリプション開始')
+      console.log(graphalQuery)
+      subscriptionOnCreate = API.graphql(graphalQuery).subscribe({
+        next: ({ value: { data }}) => {
+          const newPost = data.onCreateMyPost;
+          alert(`${newPost.owner} uploaded the new data`);
+          setUpdatedPostData(newPost);
+        },
+      });
+  
+      subscriptionOnDelete = API.graphql(
+        graphqlOperation(newOnDeletePost)
+      ).subscribe({
+        next: (updatedPostData) => {
+          alert(`${updatedPostData.value.data.newOnDeletePost.owner} deleted the new data`);
+          console.log({updatedPostData:updatedPostData})
+          setUpdatedPostData(updatedPostData);
+        },
+      });
+    }catch(error){
+      console.error(error);
+    }
   };
 
   // 初回レンダリング時に実行
   useEffect(() => {
+    fetch('/api/hello')
+      .then((response) => response.json()
+        .then((data)=>console.log(data))
+      );
     // 現在のログインユーザ情報を取得 
     Auth.currentAuthenticatedUser()
       .then((result)=>setCurrentUser(result.username))
